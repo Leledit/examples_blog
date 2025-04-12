@@ -10,6 +10,6 @@ public class PedidoListenerJms {
     @JmsListener(destination = "fila.pedidos", containerFactory = "myFactory")
     public void processarPedido(Pedido pedido) {
         System.out.println("📩 [JMS] Pedido recebido: " + pedido);
-        // Simular lógica de processamento (e-mail, estoque, etc.)
+
     }
 }

@@ -1,6 +1,7 @@
 package com.messaging.controller;
 
 import com.messaging.model.Pedido;
+import com.messaging.rabbitmq.PedidoProducerRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,9 +18,17 @@ public class PedidoController {
     @Autowired
     private JmsTemplate jmsTemplate;
 
-    @PostMapping
-    public ResponseEntity<String> enviarPedido(@RequestBody Pedido pedido) {
+    @PostMapping("/jms")
+    public ResponseEntity<String> enviarPedidoJms(@RequestBody Pedido pedido) {
         jmsTemplate.convertAndSend("fila.pedidos", pedido);
         return ResponseEntity.status(HttpStatus.OK).body("Pedido enviado via JMS!");
+    }
+
+    @Autowired
+    private PedidoProducerRabbit pedidoProducer;
+    @PostMapping("/rabbitmq")
+    public ResponseEntity<String> enviarPedidoRabbitMq(@RequestBody Pedido pedido) {
+        pedidoProducer.enviarPedido(pedido);
+        return ResponseEntity.status(HttpStatus.OK).body("Pedido enviado via rabbitMq!");
     }
 }
