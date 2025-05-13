@@ -1,5 +1,6 @@
 package com.messaging.controller;
 
+import com.messaging.kafka.PedidoProducerKafka;
 import com.messaging.model.Pedido;
 import com.messaging.rabbitmq.PedidoProducerRabbit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,13 @@ public class PedidoController {
     public ResponseEntity<String> enviarPedidoRabbitMq(@RequestBody Pedido pedido) {
         pedidoProducer.enviarPedido(pedido);
         return ResponseEntity.status(HttpStatus.OK).body("Pedido enviado via rabbitMq!");
+    }
+
+    @Autowired
+    private PedidoProducerKafka pedidoProducerKafka;
+    @PostMapping("/kafka")
+    public ResponseEntity<String> enviarPedidoKafka(@RequestBody Pedido pedido) {
+        pedidoProducerKafka.enviarPedido(pedido);
+        return ResponseEntity.ok("Pedido enviado com sucesso via Kafka!");
     }
 }
